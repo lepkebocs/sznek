@@ -9,18 +9,64 @@ dims = screen.getmaxyx()
 
 
 def maze():
-    for i in range(6, 10):
-        screen.addstr(i, 13, "█")
-    for i in range(12, 23):
-        screen.addstr(i, 13, "█")
-    for i in range(8, 11):
-        screen.addstr(i, 30, "█")
-    for i in range(13, 23):
-        screen.addstr(i, 30, "█")
-    for i in range(13, 30):
+    for i in range(3, 5):  # ball 1
+        screen.addstr(i, 4, "█")
+    for i in range(7, 11):
+        screen.addstr(i, 4, "█")
+    for i in range(3, 7):
+        screen.addstr(i, 18, "█")
+    for i in range(9, 11):
+        screen.addstr(i, 18, "█")
+    for i in range(4, 18):
+        screen.addstr(3, i, "█")
+    for i in range(4, 19):
+        screen.addstr(11, i, "█")
+
+    for i in range(14, 17):  # ball 2
+        screen.addstr(i, 4, "█")
+    for i in range(19, 22):
+        screen.addstr(i, 4, "█")
+    for i in range(14, 22):
+        screen.addstr(i, 18, "█")
+    for i in range(4, 18):
+        screen.addstr(14, i, "█")
+    for i in range(4, 7):
+        screen.addstr(22, i, "█")
+    for i in range(9, 19):
+        screen.addstr(22, i, "█")
+
+    for i in range(8, 17):  # penis
+        screen.addstr(i, 22, "█")
+    for i in range(22, 27):
         screen.addstr(8, i, "█")
-    for i in range(13, 28):
-        screen.addstr(23, i, "█")
+    for i in range(29, 43):
+        screen.addstr(8, i, "█")
+    for i in range(46, 68):
+        screen.addstr(8, i, "█")
+    for i in range(22, 32):
+        screen.addstr(17, i, "█")
+    for i in range(34, 50):
+        screen.addstr(17, i, "█")
+    for i in range(52, 68):
+        screen.addstr(17, i, "█")
+    for i in range(8, 12):
+        screen.addstr(i, 68, "█")
+    for i in range(14, 18):
+        screen.addstr(i, 68, "█")
+
+
+    for i in range(15, 18):
+        screen.addstr(i, 26, "█")
+    for i in range(13, 18):
+        screen.addstr(i, 36, "█")
+    for i in range(8, 12):
+        screen.addstr(i, 48, "█")
+    for i in range(8, 12):
+        screen.addstr(i, 61, "█")
+    for i in range(13, 18):
+        screen.addstr(i, 57, "█")
+    for i in range(54, 58):
+        screen.addstr(13, i, "█")
 
 
 def game():
@@ -81,11 +127,11 @@ def game():
         screen.move(dims[0]-1, dims[1]-1)
         screen.refresh()
         if score <= 5:
-            speed = 0.1
+            speed = 0.15
         elif score > 5 and score < 12:
-            speed = 0.05
+            speed = 0.10
         elif score >= 12:
-            speed = 0.01
+            speed = 0.003
         time.sleep(speed)
     screen.clear()
     screen.nodelay(0)
