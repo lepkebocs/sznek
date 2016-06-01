@@ -8,6 +8,21 @@ screen.keypad(1)
 dims = screen.getmaxyx()
 
 
+def maze():
+    for i in range(6, 10):
+        screen.addstr(i, 13, "█")
+    for i in range(12, 23):
+        screen.addstr(i, 13, "█")
+    for i in range(8, 11):
+        screen.addstr(i, 30, "█")
+    for i in range(13, 23):
+        screen.addstr(i, 30, "█")
+    for i in range(13, 30):
+        screen.addstr(8, i, "█")
+    for i in range(13, 28):
+        screen.addstr(23, i, "█")
+
+
 def game():
     screen.nodelay(1)
     head = [1, 1]
@@ -27,7 +42,7 @@ def game():
             y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
             if screen.inch(y, x) == ord(" "):
                 foodmade = True
-                screen.addch(y, x, ord("@"))
+                screen.addch(y, x, ord("*"))
 
         if deadcell not in body:
             screen.addch(deadcell[0], deadcell[1], " ")
@@ -58,7 +73,7 @@ def game():
         body[0] = head[:]
         lab_vert_left = []
         if screen.inch(head[0], head[1]) != ord(" "):
-            if screen.inch(head[0], head[1]) == ord("@"):
+            if screen.inch(head[0], head[1]) == ord("*"):
                 foodmade = False
                 body.append(body[-1])
             else:
@@ -88,11 +103,13 @@ def game():
         q = screen.getch()
     if q == 32:
         screen.clear()
+        maze()
         game()
     elif q == 27:
         curses.endwin()
         exit()
 
     screen.getch()
+maze()
 game()
 curses.endwin()
