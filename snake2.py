@@ -7,36 +7,13 @@ screen = curses.initscr()
 screen.keypad(1)
 dims = screen.getmaxyx()
 score = 0
+#life = [' 💛 ', ' 💛 ', ' 💛 ']
+
 
 def maze():
     curses.start_color()
     curses.initscr()
-    #curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-    for i in range(3, 5):  # ball 1
-        screen.addstr(i, 4, "█")
-    for i in range(7, 11):
-        screen.addstr(i, 4, "█")
-    for i in range(3, 7):
-        screen.addstr(i, 18, "█")
-    for i in range(9, 11):
-        screen.addstr(i, 18, "█")
-    for i in range(4, 18):
-        screen.addstr(3, i, "█")
-    for i in range(4, 19):
-        screen.addstr(11, i, "█")
-
-    for i in range(14, 17):  # ball 2
-        screen.addstr(i, 4, "█")
-    for i in range(19, 22):
-        screen.addstr(i, 4, "█")
-    for i in range(14, 22):
-        screen.addstr(i, 18, "█")
-    for i in range(4, 18):
-        screen.addstr(14, i, "█")
-    for i in range(4, 7):
-        screen.addstr(22, i, "█")
-    for i in range(9, 19):
-        screen.addstr(22, i, "█")
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
 
     for i in range(8, 17):  # penis
         screen.addstr(i, 22, "█")
@@ -79,16 +56,20 @@ def game():
     direction = 0
     gameover = False
     foodmade = False
+    death = False
     deadcell = body[-1][:]
     f = open("snake.txt", "r")
     text = f.readline()
+    life = 3
 
     while not gameover:
+        screen.refresh()
         score = len(body)-5
         screen.addstr(0, 1, " Score: " + str(score) + " ")
         title = 'Snake Game'
         screen.addstr(0, (curses.COLS - len(title)) // 2, title)
         screen.addstr(0, 12, " Highscore: " + str(text) + " ")
+        screen.addstr(0, 49, " Life:" + str(life))
         if score > int(text):
             with open("snake.txt", "w")as output:
                 output.write(str(score))
@@ -97,10 +78,16 @@ def game():
             if screen.inch(y, x) == ord(" "):
                 foodmade = True
                 screen.addch(y, x, ord("*"))
+        while not death:
+            for i in range(1, 3):
+                y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
+                if screen.inch(y, x) == ord(" "):
+                    death = True
+                    screen.addch(y, x, ord("@"))
 
         if deadcell not in body:
             screen.addch(deadcell[0], deadcell[1], " ")
-        screen.addch(head[0], head[1], 'o',curses.color_pair(2))
+        screen.addch(head[0], head[1], 'o', curses.color_pair(2))
 
         action = screen.getch()
         if action == curses.KEY_UP and direction != 1:
@@ -125,11 +112,17 @@ def game():
             body[z] = body[z-1]
 
         body[0] = head[:]
-        lab_vert_left = []
         if screen.inch(head[0], head[1]) != ord(" "):
             if screen.inch(head[0], head[1]) == ord("*"):
                 foodmade = False
                 body.append(body[-1])
+            elif screen.inch(head[0], head[1]) == ord("@"):
+                life = life - 1
+                death = False
+                screen.addstr(0, 49, " Life: " + str(life))
+                screen.refresh()
+                if life == 0:
+                    gameover = True
             else:
                 gameover = True
         screen.move(dims[0]-1, dims[1]-1)
