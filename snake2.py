@@ -9,6 +9,9 @@ dims = screen.getmaxyx()
 score = 0
 
 def maze():
+    curses.start_color()
+    curses.initscr()
+    #curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
     for i in range(3, 5):  # ball 1
         screen.addstr(i, 4, "█")
     for i in range(7, 11):
@@ -68,6 +71,7 @@ def maze():
 
 
 def game():
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     screen.nodelay(1)
     head = [1, 1]
     body = [head[:]]*5
@@ -96,7 +100,7 @@ def game():
 
         if deadcell not in body:
             screen.addch(deadcell[0], deadcell[1], " ")
-        screen.addch(head[0], head[1], 'o')
+        screen.addch(head[0], head[1], 'o',curses.color_pair(2))
 
         action = screen.getch()
         if action == curses.KEY_UP and direction != 1:
