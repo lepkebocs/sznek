@@ -7,7 +7,6 @@ screen = curses.initscr()
 screen.keypad(1)
 dims = screen.getmaxyx()
 score = 0
-#life = [' 💛 ', ' 💛 ', ' 💛 ']
 
 
 def maze():
@@ -15,7 +14,7 @@ def maze():
     curses.initscr()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
 
-    for i in range(8, 17):  # penis
+    for i in range(8, 17):  # 8==>
         screen.addstr(i, 22, "█")
     for i in range(22, 27):
         screen.addstr(8, i, "█")
@@ -50,35 +49,35 @@ def maze():
 def game():
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     screen.nodelay(1)
-    head = [1, 1]
-    body = [head[:]]*5
+    head = [1, 1]  # snake head
+    body = [head[:]]*5  # snake body
     screen.border()
     direction = 0
     gameover = False
-    foodmade = False
+    food_made = False
     death = False
     deadcell = body[-1][:]
-    f = open("snake.txt", "r")
+    f = open("snake.txt", "r")  # highscore txt
     text = f.readline()
     life = 3
 
     while not gameover:
         screen.refresh()
-        score = len(body)-5
+        score = len(body)-5  # score is calculated from the lenght of the snake
         screen.addstr(0, 1, " Score: " + str(score) + " ")
         title = 'Snake Game'
         screen.addstr(0, (curses.COLS - len(title)) // 2, title)
         screen.addstr(0, 12, " Highscore: " + str(text) + " ")
-        screen.addstr(0, 49, " Life:" + str(life))
-        if score > int(text):
+        screen.addstr(0, 69, " Life: " + str(life) + " ")
+        if score > int(text):  # stores the score in the highscore list
             with open("snake.txt", "w")as output:
                 output.write(str(score))
-        while not foodmade:
+        while not food_made:  # checks if there are food on the screen, if not, it creates one
             y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
             if screen.inch(y, x) == ord(" "):
-                foodmade = True
+                food_made = True
                 screen.addch(y, x, ord("*"))
-        while not death:
+        while not death:  # checks if there are traps on the screen, if not, it creates some
             for i in range(1, 3):
                 y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
                 if screen.inch(y, x) == ord(" "):
@@ -89,7 +88,7 @@ def game():
             screen.addch(deadcell[0], deadcell[1], " ")
         screen.addch(head[0], head[1], 'o', curses.color_pair(2))
 
-        action = screen.getch()
+        action = screen.getch()  # controls
         if action == curses.KEY_UP and direction != 1:
             direction = 3
         elif action == curses.KEY_DOWN and direction != 3:
@@ -111,23 +110,21 @@ def game():
         for z in range(len(body)-1, 0, -1):
             body[z] = body[z-1]
 
-        body[0] = head[:]
+        body[0] = head[:]  # checks what the snake encounters
         if screen.inch(head[0], head[1]) != ord(" "):
             if screen.inch(head[0], head[1]) == ord("*"):
-                foodmade = False
+                food_made = False
                 body.append(body[-1])
             elif screen.inch(head[0], head[1]) == ord("@"):
                 life = life - 1
                 death = False
-                screen.addstr(0, 49, " Life: " + str(life))
-                screen.refresh()
                 if life == 0:
                     gameover = True
             else:
                 gameover = True
         screen.move(dims[0]-1, dims[1]-1)
         screen.refresh()
-        if score <= 5:
+        if score <= 5:  # modifies speed based on the score
             speed = 0.13
         elif score > 5 and score < 12:
             speed = 0.08
@@ -146,7 +143,7 @@ def game():
     screen.addstr(14, (curses.COLS - len(message4)) // 2, message4)
     screen.refresh()
     q = 0
-    while q not in [32, 27]:
+    while q not in [32, 27]:  # gameover screen
         q = screen.getch()
     if q == 32:
         screen.clear()
