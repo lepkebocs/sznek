@@ -6,7 +6,7 @@ from sys import exit
 screen = curses.initscr()
 screen.keypad(1)
 dims = screen.getmaxyx()
-
+score = 0
 
 def maze():
     for i in range(3, 5):  # ball 1
@@ -53,8 +53,6 @@ def maze():
         screen.addstr(i, 68, "█")
     for i in range(14, 18):
         screen.addstr(i, 68, "█")
-
-
     for i in range(15, 18):
         screen.addstr(i, 26, "█")
     for i in range(13, 18):
@@ -78,12 +76,18 @@ def game():
     gameover = False
     foodmade = False
     deadcell = body[-1][:]
+    f = open("snake.txt", "r")
+    text = f.readline()
 
     while not gameover:
         score = len(body)-5
-        screen.addstr(0, 1, "Score: " + str(score) + " ")
+        screen.addstr(0, 1, " Score: " + str(score) + " ")
         title = 'Snake Game'
         screen.addstr(0, (curses.COLS - len(title)) // 2, title)
+        screen.addstr(0, 12, " Highscore: " + str(text) + " ")
+        if score > int(text):
+            with open("snake.txt", "w")as output:
+                output.write(str(score))
         while not foodmade:
             y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
             if screen.inch(y, x) == ord(" "):
@@ -127,11 +131,11 @@ def game():
         screen.move(dims[0]-1, dims[1]-1)
         screen.refresh()
         if score <= 5:
-            speed = 0.15
+            speed = 0.13
         elif score > 5 and score < 12:
-            speed = 0.10
+            speed = 0.08
         elif score >= 12:
-            speed = 0.003
+            speed = 0.01
         time.sleep(speed)
     screen.clear()
     screen.nodelay(0)
@@ -156,6 +160,7 @@ def game():
         exit()
 
     screen.getch()
+
 maze()
 game()
 curses.endwin()
