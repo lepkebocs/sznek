@@ -13,43 +13,71 @@ def maze():
     curses.start_color()
     curses.initscr()
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    c_1 = curses.color_pair(1)
+    c_3 = curses.color_pair(3)
+    c_4 = curses.color_pair(4)
 
-    for i in range(8, 17):  # 8==>
-        screen.addstr(i, 22, "█")
-    for i in range(22, 27):
-        screen.addstr(8, i, "█")
-    for i in range(29, 43):
-        screen.addstr(8, i, "█")
-    for i in range(46, 68):
-        screen.addstr(8, i, "█")
-    for i in range(22, 32):
-        screen.addstr(17, i, "█")
-    for i in range(34, 50):
-        screen.addstr(17, i, "█")
-    for i in range(52, 68):
-        screen.addstr(17, i, "█")
-    for i in range(8, 12):
-        screen.addstr(i, 68, "█")
-    for i in range(14, 18):
-        screen.addstr(i, 68, "█")
-    for i in range(15, 18):
-        screen.addstr(i, 26, "█")
-    for i in range(13, 18):
-        screen.addstr(i, 36, "█")
-    for i in range(8, 12):
-        screen.addstr(i, 48, "█")
-    for i in range(8, 12):
-        screen.addstr(i, 61, "█")
-    for i in range(13, 18):
-        screen.addstr(i, 57, "█")
-    for i in range(54, 58):
-        screen.addstr(13, i, "█")
+    for i in range(4, 9):
+        screen.addstr(i, 7, "█", c_3)  # head1
+    for i in range(12, 18):
+        screen.addstr(i, 7, "█", c_3)
+    for i in range(4, 9):
+        screen.addstr(i, 26, "█", c_3)
+    for i in range(12, 18):
+        screen.addstr(i, 26, "█", c_3)
+    for i in range(7, 27):
+        screen.addstr(4, i, "█", c_3)
+    for i in range(7, 27):
+        screen.addstr(17, i, "█", c_3)
+    for i in range(12, 15):
+        screen.addstr(7, i, "█", c_3)  # eyes
+    for i in range(19, 22):
+        screen.addstr(7, i, "█", c_3)
+    for i in range(12, 15):
+        screen.addstr(8, i, "█", c_3)
+    for i in range(19, 22):
+        screen.addstr(8, i, "█", c_3)
+    for i in range(11, 23):
+        screen.addstr(14, i, "█", c_3)  # mouth
+    for i in range(12, 15):
+        screen.addstr(i, 11, "█", c_3)
+    for i in range(12, 15):
+        screen.addstr(i, 22, "█", c_3)
+    for i in range(4, 9):
+        screen.addstr(i, 45, "█", c_4)  # head2
+    for i in range(12, 18):
+        screen.addstr(i, 45, "█", c_4)
+    for i in range(4, 9):
+        screen.addstr(i, 64, "█", c_4)
+    for i in range(12, 18):
+        screen.addstr(i, 64, "█", c_4)
+    for i in range(45, 64):
+        screen.addstr(4, i, "█", c_4)
+    for i in range(45, 64):
+        screen.addstr(17, i, "█", c_4)
+    for i in range(50, 53):
+        screen.addstr(7, i, "█", c_4)  # eyes
+    for i in range(57, 60):
+        screen.addstr(7, i, "█", c_4)
+    for i in range(50, 53):
+        screen.addstr(8, i, "█", c_4)
+    for i in range(57, 60):
+        screen.addstr(8, i, "█", c_4)
+    for i in range(49, 61):
+        screen.addstr(14, i, "█", c_4)  # mouth
+    for i in range(12, 15):
+        screen.addstr(i, 49, "█", c_4)
+    for i in range(12, 15):
+        screen.addstr(i, 60, "█", c_4)
 
 
 def game():
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
     screen.nodelay(1)
-    head = [1, 1]  # snake head
+    head = [2, 2]  # snake head
     body = [head[:]]*5  # snake body
     screen.border()
     direction = 0
@@ -68,7 +96,7 @@ def game():
         title = 'Snake Game'
         screen.addstr(0, (curses.COLS - len(title)) // 2, title)
         screen.addstr(0, 12, " Highscore: " + str(text) + " ")
-        screen.addstr(0, 69, " Life: " + str(life) + " ")
+        screen.addstr(0, 65, " Life: " + "💛 "*life + " ")
         if score > int(text):  # stores the score in the highscore list
             with open("snake.txt", "w")as output:
                 output.write(str(score))
@@ -78,7 +106,7 @@ def game():
                 food_made = True
                 screen.addch(y, x, ord("*"))
         while not death:  # checks if there are traps on the screen, if not, it creates some
-            for i in range(1, 3):
+            for i in range(1, 10):
                 y, x = random.randrange(1, dims[0]-1), random.randrange(1, dims[1]-1)
                 if screen.inch(y, x) == ord(" "):
                     death = True
@@ -125,11 +153,11 @@ def game():
         screen.move(dims[0]-1, dims[1]-1)
         screen.refresh()
         if score <= 5:  # modifies speed based on the score
-            speed = 0.13
+            speed = 0.15
         elif score > 5 and score < 12:
-            speed = 0.08
+            speed = 0.10
         elif score >= 12:
-            speed = 0.01
+            speed = 0.08
         time.sleep(speed)
     screen.clear()
     screen.nodelay(0)
@@ -154,7 +182,6 @@ def game():
         exit()
 
     screen.getch()
-
 maze()
 game()
 curses.endwin()
